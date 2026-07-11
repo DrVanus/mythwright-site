@@ -153,6 +153,17 @@
     .stat-strip .stat .num { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--gold-bright); }
     .stat-strip .stat .lbl { font-size: .82rem; color: var(--tertiary-fg); letter-spacing: 0.06em; text-transform: uppercase; }
 
+    /* Device showcase */
+    .showcase { padding: 4px 0 30px; }
+    .showcase .container { display: flex; justify-content: center; }
+    .device {
+      position: relative; width: 300px; max-width: 80vw; padding: 12px;
+      background: linear-gradient(160deg, #2c2213, #14100a);
+      border-radius: 46px; border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow), 0 0 70px var(--gold-glow);
+    }
+    .device img { display: block; width: 100%; border-radius: 34px; }
+
     /* ===== SECTION ===== */
     section { padding: 72px 0; position: relative; }
     .section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
@@ -258,6 +269,14 @@
       </div>
     </div>
   </header>
+
+  <section class="showcase" aria-label="Mythwright on iPhone">
+    <div class="container">
+      <div class="device">
+        <img src="screenshot.jpg" alt="The Mythwright home screen on iPhone — Ranked PvP, Practice, Campaign, and Conquest game modes with today's featured card.">
+      </div>
+    </div>
+  </section>
 
   <section id="features">
     <div class="container">
