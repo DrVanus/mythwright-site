@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0E0B06">
+  <title>Mythwright — Cards Worth Collecting</title>
+  <meta name="description" content="A collectible card game where you gather mythic characters, forge decks, and battle across three lanes. Six factions, 200+ cards, an AI Card Forge, and a full campaign.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://drvanus.github.io/mythwright-site/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mythwright — Cards Worth Collecting">
+  <meta property="og:description" content="Collect mythic characters, build decks, and battle in three lanes. Six factions, 200+ cards, an AI Card Forge, and a full campaign.">
+  <meta property="og:url" content="https://drvanus.github.io/mythwright-site/">
+  <meta property="og:site_name" content="Mythwright">
+  <meta property="og:image" content="https://drvanus.github.io/mythwright-site/app-icon.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mythwright — Cards Worth Collecting">
+  <meta name="twitter:description" content="Collect mythic characters, build decks, and battle in three lanes.">
+  <meta name="twitter:image" content="https://drvanus.github.io/mythwright-site/app-icon.png">
+
+  <link rel="icon" type="image/png" href="app-icon.png">
+  <link rel="apple-touch-icon" href="app-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0E0B06;              /* deep parchment-black */
+      --bg-2: #16110A;
+      --surface: #1C1509;
+      --card: #1A1409;
+      --card-soft: #221A0C;
+      --fg: #F3E9D2;             /* aged parchment */
+      --muted-fg: #C4B189;
+      --tertiary-fg: #8A7A56;
+      --gold: #E0B34C;           /* primary amber-gold */
+      --gold-bright: #F6CE6A;
+      --gold-deep: #B08526;
+      --ember: #D9793B;          /* warm ember accent */
+      --arcane: #7C6BC4;         /* faction contrast */
+      --border: rgba(224,179,76,0.16);
+      --border-strong: rgba(224,179,76,0.30);
+      --gold-glow: rgba(224,179,76,0.14);
+      --radius: 0.9rem;
+      --radius-lg: 1.35rem;
+      --shadow: 0 20px 60px rgba(0,0,0,0.55);
+    }
+
+    html { scroll-behavior: smooth; background: var(--bg); color-scheme: dark; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Atmospheric arcane glow */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 18% -5%, rgba(224,179,76,0.13), transparent 60%),
+        radial-gradient(ellipse 65% 50% at 88% 8%, rgba(217,121,59,0.10), transparent 65%),
+        radial-gradient(ellipse 80% 60% at 50% 108%, rgba(124,107,196,0.08), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    h1, h2, h3, .display { font-family: 'Cinzel', Georgia, serif; letter-spacing: 0.01em; }
+
+    a { color: var(--gold-bright); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--gold); }
+
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ===== NAV ===== */
+    nav.site {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(14,11,6,0.78);
+      backdrop-filter: saturate(160%) blur(16px);
+      -webkit-backdrop-filter: saturate(160%) blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav.site .container {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 13px; padding-bottom: 13px;
+    }
+    nav.site .brand {
+      display: flex; align-items: center; gap: 12px;
+      font-family: 'Cinzel', serif; font-weight: 700; color: var(--fg);
+      font-size: 1.2rem; letter-spacing: 0.02em;
+    }
+    nav.site .brand img { width: 34px; height: 34px; border-radius: 8px; box-shadow: 0 0 0 1px var(--border-strong); }
+    nav.site .links { display: flex; gap: 26px; align-items: center; }
+    nav.site .links a { color: var(--muted-fg); font-weight: 600; font-size: .95rem; font-family: 'Inter', sans-serif; }
+    nav.site .links a:hover { color: var(--gold-bright); }
+    @media (max-width: 680px) { nav.site .links a:not(.btn) { display: none; } }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep));
+      color: #221803; font-weight: 700; font-family: 'Inter', sans-serif;
+      padding: 11px 22px; border-radius: 999px; font-size: .95rem;
+      box-shadow: 0 6px 20px rgba(224,179,76,0.28); border: 1px solid rgba(255,255,255,0.12);
+      transition: transform .15s, box-shadow .2s;
+    }
+    .btn:hover { color: #221803; transform: translateY(-1px); box-shadow: 0 10px 30px rgba(224,179,76,0.4); }
+    .btn.ghost {
+      background: transparent; color: var(--gold-bright);
+      border: 1px solid var(--border-strong); box-shadow: none;
+    }
+    .btn.ghost:hover { background: var(--gold-glow); }
+
+    /* ===== HERO ===== */
+    header.hero { padding: 84px 0 72px; text-align: center; }
+    .hero .kicker {
+      display: inline-block; font-family: 'Inter', sans-serif; font-weight: 700;
+      font-size: .78rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); padding: 6px 16px; border: 1px solid var(--border-strong);
+      border-radius: 999px; margin-bottom: 26px; background: var(--gold-glow);
+    }
+    .hero img.crest {
+      width: 128px; height: 128px; border-radius: 28px; margin: 0 auto 30px;
+      display: block; box-shadow: var(--shadow), 0 0 0 1px var(--border-strong);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.05; font-weight: 800;
+      background: linear-gradient(180deg, #FBF3DD 0%, var(--gold-bright) 70%, var(--gold-deep) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 22px;
+    }
+    .hero p.sub {
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem); color: var(--muted-fg);
+      max-width: 640px; margin: 0 auto 36px;
+    }
+    .hero .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .hero .stat-strip {
+      display: flex; gap: 44px; justify-content: center; flex-wrap: wrap;
+      margin-top: 58px; padding-top: 30px; border-top: 1px solid var(--border);
+      max-width: 640px; margin-left: auto; margin-right: auto;
+    }
+    .stat-strip .stat .num { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--gold-bright); }
+    .stat-strip .stat .lbl { font-size: .82rem; color: var(--tertiary-fg); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* ===== SECTION ===== */
+    section { padding: 72px 0; position: relative; }
+    .section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
+    .section-head h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; margin-bottom: 14px; color: var(--fg); }
+    .section-head p { color: var(--muted-fg); font-size: 1.08rem; }
+
+    /* Feature grid */
+    .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    @media (max-width: 760px) { .features { grid-template-columns: 1fr; } }
+    .feature {
+      background: linear-gradient(180deg, var(--card), var(--bg-2));
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 30px 28px; transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .feature:hover { transform: translateY(-3px); border-color: var(--border-strong); box-shadow: var(--shadow); }
+    .feature .ic {
+      width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
+      background: var(--gold-glow); border: 1px solid var(--border-strong); margin-bottom: 18px;
+      font-size: 1.5rem;
+    }
+    .feature h3 { font-size: 1.28rem; font-weight: 700; margin-bottom: 9px; color: var(--fg); font-family: 'Cinzel', serif; }
+    .feature p { color: var(--muted-fg); font-size: 1rem; }
+
+    /* Factions */
+    .factions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 760px) { .factions { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 460px) { .factions { grid-template-columns: 1fr; } }
+    .faction {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px; text-align: center;
+      transition: transform .2s, border-color .2s;
+    }
+    .faction:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+    .faction .glyph { font-size: 2rem; margin-bottom: 10px; }
+    .faction h4 { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.1rem; color: var(--gold-bright); margin-bottom: 5px; }
+    .faction p { font-size: .9rem; color: var(--tertiary-fg); }
+
+    /* Lanes explainer */
+    .lanes {
+      display: flex; gap: 12px; margin-top: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 22px;
+    }
+    @media (max-width: 640px) { .lanes { flex-direction: column; } }
+    .lane {
+      flex: 1; text-align: center; padding: 22px 14px; border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card-soft), transparent);
+      border: 1px dashed var(--border-strong);
+    }
+    .lane .n { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--gold); }
+    .lane h4 { margin: 8px 0 4px; font-family: 'Inter', sans-serif; font-size: 1rem; }
+    .lane p { font-size: .88rem; color: var(--muted-fg); }
+
+    /* CTA band */
+    .cta-band {
+      text-align: center; background:
+        radial-gradient(ellipse 60% 120% at 50% 0%, var(--gold-glow), transparent 70%),
+        linear-gradient(180deg, var(--bg-2), var(--bg));
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 60px 30px; margin: 20px 0;
+    }
+    .cta-band h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 14px; }
+    .cta-band p { color: var(--muted-fg); max-width: 480px; margin: 0 auto 28px; font-size: 1.08rem; }
+
+    /* Footer */
+    footer.site { border-top: 1px solid var(--border); padding: 44px 0; margin-top: 40px; }
+    footer.site .container { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+    footer.site .brand { display: flex; align-items: center; gap: 10px; font-family: 'Cinzel', serif; color: var(--muted-fg); font-weight: 700; }
+    footer.site .brand img { width: 28px; height: 28px; border-radius: 7px; }
+    footer.site .flinks { display: flex; gap: 22px; }
+    footer.site .flinks a { color: var(--tertiary-fg); font-size: .92rem; }
+    footer.site .flinks a:hover { color: var(--gold-bright); }
+    footer.site .copy { color: var(--tertiary-fg); font-size: .85rem; width: 100%; text-align: center; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <nav class="site">
+    <div class="container">
+      <div class="brand"><img src="app-icon.png" alt="Mythwright icon"> Mythwright</div>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#factions">Factions</a>
+        <a href="#lanes">How it plays</a>
+        <a href="#get" class="btn ghost">Coming to iOS</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <span class="kicker">Collectible Card Game · iOS</span>
+      <img src="app-icon.png" alt="Mythwright" class="crest">
+      <h1>Cards Worth Collecting</h1>
+      <p class="sub">A CCG where you collect mythic characters, build decks, and battle in three lanes. Every card is a legend — and every game is a duel of nerve and timing.</p>
+      <div class="cta-row">
+        <a href="#get" class="btn">Get Mythwright</a>
+        <a href="#features" class="btn ghost">See what's inside</a>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><div class="num">6</div><div class="lbl">Factions</div></div>
+        <div class="stat"><div class="num">200+</div><div class="lbl">Cards</div></div>
+        <div class="stat"><div class="num">3</div><div class="lbl">Lanes</div></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-head">
+        <h2>Built for collectors and tacticians</h2>
+        <p>Fast duels, deep deckbuilding, and a card pool that keeps growing.</p>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <div class="ic">🛡️</div>
+          <h3>Six Factions</h3>
+          <p>Each faction plays like nothing else — aggro warbands, patient control, swarms, and combo engines. Pick a banner and master its rhythm.</p>
+        </div>
+        <div class="feature">
+          <div class="ic">🃏</div>
+          <h3>200+ Cards</h3>
+          <p>A living roster of mythic characters, spells, and relics. Chase rares, complete sets, and find the synergies that break a lane wide open.</p>
+        </div>
+        <div class="feature">
+          <div class="ic">✨</div>
+          <h3>AI Card Forge</h3>
+          <p>Conjure original cards from a prompt — art, name, and abilities forged on the fly. Bring your own legends to the battlefield.</p>
+        </div>
+        <div class="feature">
+          <div class="ic">🗺️</div>
+          <h3>Campaign Mode</h3>
+          <p>A story-driven ladder of hand-crafted battles. Unlock cards as you go, learn each faction, and earn your place among the mythwrights.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lanes" style="padding-top:0;">
+    <div class="container">
+      <div class="section-head">
+        <h2>Win the war across three lanes</h2>
+        <p>Snap-style, three-lane duels: spread thin or commit hard. Read your opponent and take two of three.</p>
+      </div>
+      <div class="lanes">
+        <div class="lane"><div class="n">I</div><h4>Left Flank</h4><p>Open aggressive, force an early trade.</p></div>
+        <div class="lane"><div class="n">II</div><h4>Center Hold</h4><p>The contested middle — bluff and counter.</p></div>
+        <div class="lane"><div class="n">III</div><h4>Right Flank</h4><p>Bank power for a decisive final turn.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="factions">
+    <div class="container">
+      <div class="section-head">
+        <h2>Choose your banner</h2>
+        <p>Six mythic factions, each with its own identity and win condition.</p>
+      </div>
+      <div class="factions">
+        <div class="faction"><div class="glyph">🔥</div><h4>Emberkin</h4><p>Reckless aggression &amp; burn.</p></div>
+        <div class="faction"><div class="glyph">🌊</div><h4>Tidewardens</h4><p>Control, bounce, and tempo.</p></div>
+        <div class="faction"><div class="glyph">🌲</div><h4>Wildbound</h4><p>Swarms that grow every turn.</p></div>
+        <div class="faction"><div class="glyph">⚙️</div><h4>Ironforged</h4><p>Relics, engines, and value.</p></div>
+        <div class="faction"><div class="glyph">🌑</div><h4>Nightsworn</h4><p>Sacrifice, guile, and combo.</p></div>
+        <div class="faction"><div class="glyph">⚡</div><h4>Stormcallers</h4><p>Explosive spell payoffs.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="get">
+    <div class="container">
+      <div class="cta-band">
+        <h2>Forge your legend</h2>
+        <p>Mythwright is coming to iPhone and iPad. Collect the cards, build the deck, and take your seat at the table.</p>
+        <div class="cta-row" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+          <a href="#" class="btn">Coming to the App Store</a>
+          <a href="privacy.html" class="btn ghost">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="container">
+      <div class="brand"><img src="app-icon.png" alt="Mythwright icon"> Mythwright</div>
+      <div class="flinks">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="#features">Features</a>
+      </div>
+      <div class="copy">© 2026 Mythwright. All cards, factions, and artwork are the property of their creators.</div>
+    </div>
+  </footer>
+</body>
+</html>
