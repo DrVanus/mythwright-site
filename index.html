@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0E0B06">
-  <title>Mythwright — Cards Worth Collecting</title>
+  <title>Mythwright — Collect. Build. Battle.</title>
   <meta name="description" content="A collectible card game where you gather mythic characters, forge decks, and battle across three lanes. Six factions, 200+ cards, an AI Card Forge, and a full campaign.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://drvanus.github.io/mythwright-site/">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Mythwright — Cards Worth Collecting">
+  <meta property="og:title" content="Mythwright — Collect. Build. Battle.">
   <meta property="og:description" content="Collect mythic characters, build decks, and battle in three lanes. Six factions, 200+ cards, an AI Card Forge, and a full campaign.">
   <meta property="og:url" content="https://drvanus.github.io/mythwright-site/">
   <meta property="og:site_name" content="Mythwright">
   <meta property="og:image" content="https://drvanus.github.io/mythwright-site/app-icon.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Mythwright — Cards Worth Collecting">
+  <meta name="twitter:title" content="Mythwright — Collect. Build. Battle.">
   <meta name="twitter:description" content="Collect mythic characters, build decks, and battle in three lanes.">
   <meta name="twitter:image" content="https://drvanus.github.io/mythwright-site/app-icon.png">
 
@@ -198,11 +198,13 @@
     }
     .feature:hover { transform: translateY(-3px); border-color: var(--border-strong); box-shadow: var(--shadow); }
     .feature .ic {
-      width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center;
-      background: var(--gold-glow); border: 1px solid var(--border-strong); margin-bottom: 18px;
-      color: var(--gold);
+      width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center;
+      background: linear-gradient(150deg, rgba(246,206,106,0.24), rgba(176,133,38,0.08));
+      border: 1px solid rgba(224,179,76,0.42); margin-bottom: 18px;
+      color: var(--gold-bright);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 8px 20px rgba(224,179,76,0.10);
     }
-    .feature .ic svg { width: 26px; height: 26px; display: block; }
+    .feature .ic svg { width: 26px; height: 26px; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
     .feature h3 { font-size: 1.28rem; font-weight: 700; margin-bottom: 9px; color: var(--fg); font-family: 'Cinzel', serif; }
     .feature p { color: var(--muted-fg); font-size: 1rem; }
 
@@ -277,7 +279,7 @@
     <div class="container">
       <span class="kicker">Collectible Card Game · iOS</span>
       <img src="app-icon.png" alt="Mythwright" class="crest">
-      <h1>Cards Worth Collecting</h1>
+      <h1>Collect. Build. Battle.</h1>
       <p class="sub">A CCG where you collect mythic characters, build decks, and battle in three lanes. Every card is a legend — and every game is a duel of nerve and timing.</p>
       <div class="cta-row">
         <a href="#get" class="btn">Get Mythwright</a>
