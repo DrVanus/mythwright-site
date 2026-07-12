@@ -153,34 +153,55 @@
     .stat-strip .stat .num { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: var(--gold-bright); }
     .stat-strip .stat .lbl { font-size: .82rem; color: var(--tertiary-fg); letter-spacing: 0.06em; text-transform: uppercase; }
 
-    /* Device showcase */
-    .showcase { padding: 4px 0 30px; }
-    .showcase .container { display: flex; justify-content: center; }
-    .device {
-      position: relative; width: 300px; max-width: 80vw; padding: 12px;
+    /* Device showcase — rotating carousel */
+    .showcase { padding: 6px 0 34px; }
+    .showcase .container { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+    .carousel {
+      position: relative; width: 300px; max-width: 82vw; padding: 12px;
+      aspect-ratio: 300 / 624;
       background: linear-gradient(160deg, #2c2213, #14100a);
       border-radius: 46px; border: 1px solid var(--border-strong);
       box-shadow: var(--shadow), 0 0 70px var(--gold-glow);
     }
-    .device img { display: block; width: 100%; border-radius: 34px; }
-
-    /* Screenshot gallery */
-    .gallery-row {
-      display: flex; gap: 24px; overflow-x: auto; padding: 6px 4px 22px;
-      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+    /* subtle screen bezel highlight */
+    .carousel::after {
+      content: ''; position: absolute; inset: 12px; border-radius: 34px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+      pointer-events: none; z-index: 3;
     }
-    .gallery-row::-webkit-scrollbar { display: none; }
-    .shot { flex: 0 0 auto; width: 220px; scroll-snap-align: center; text-align: center; }
+    .carousel .slide {
+      position: absolute; inset: 12px; border-radius: 34px; overflow: hidden;
+      opacity: 0; transform: scale(1.015);
+      transition: opacity .9s ease, transform 4.2s ease;
+    }
+    .carousel .slide.active { opacity: 1; transform: scale(1); z-index: 1; }
+    .carousel .slide img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 34px; }
+    .carousel-dots { display: flex; gap: 10px; justify-content: center; }
+    .carousel-dots button {
+      width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0;
+      background: var(--border-strong); cursor: pointer; transition: transform .25s, background .25s, box-shadow .25s;
+    }
+    .carousel-dots button:hover { background: var(--gold-deep); }
+    .carousel-dots button.active { background: var(--gold-bright); transform: scale(1.35); box-shadow: 0 0 12px var(--gold-glow); }
+
+    /* Screenshot gallery — responsive grid that fits the page */
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px 26px;
+      max-width: 940px; margin: 0 auto;
+    }
+    @media (max-width: 820px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 30px 22px; max-width: 560px; } }
+    @media (max-width: 460px) { .gallery-grid { grid-template-columns: 1fr; max-width: 300px; } }
+    .shot { text-align: center; }
     .shot .frame {
-      padding: 9px; border-radius: 34px;
+      padding: 8px; border-radius: 30px;
       background: linear-gradient(160deg, #2c2213, #14100a);
       border: 1px solid var(--border-strong);
-      box-shadow: var(--shadow), 0 0 46px var(--gold-glow);
+      box-shadow: var(--shadow), 0 0 42px var(--gold-glow);
+      transition: transform .2s, box-shadow .2s, border-color .2s;
     }
-    .shot .frame img { display: block; width: 100%; border-radius: 26px; }
+    .shot:hover .frame { transform: translateY(-4px); border-color: var(--gold-deep); box-shadow: var(--shadow), 0 0 60px var(--gold-glow); }
+    .shot .frame img { display: block; width: 100%; border-radius: 24px; }
     .shot .cap { margin-top: 15px; font-size: .92rem; color: var(--muted-fg); font-weight: 600; }
-    @media (max-width: 640px) { .shot { width: 190px; } }
 
     /* ===== SECTION ===== */
     section { padding: 72px 0; position: relative; }
@@ -295,8 +316,17 @@
 
   <section class="showcase" aria-label="Mythwright on iPhone">
     <div class="container">
-      <div class="device">
-        <img src="screenshot.jpg" alt="The Mythwright home screen on iPhone — Ranked PvP, Practice, Campaign, and Conquest game modes with today's featured card.">
+      <div class="carousel" id="heroCarousel" aria-label="Mythwright screenshots, auto-rotating">
+        <div class="slide active"><img src="screenshot.jpg" alt="The Mythwright home screen on iPhone — Ranked PvP, Practice, Campaign, and Conquest game modes with today's featured card."></div>
+        <div class="slide"><img src="shots/collection.jpg" alt="The Mythwright collection screen — hundreds of illustrated mythic character cards."></div>
+        <div class="slide"><img src="shots/lanes.jpg" alt="A Mythwright match in progress with character cards fought across three lanes."></div>
+        <div class="slide"><img src="shots/forge.jpg" alt="The Mythwright AI Forge — describe a character and it paints the art, balances the stats, and writes the ability."></div>
+      </div>
+      <div class="carousel-dots" id="heroDots" role="tablist" aria-label="Choose screenshot">
+        <button class="active" type="button" aria-label="Home screen"></button>
+        <button type="button" aria-label="Collection"></button>
+        <button type="button" aria-label="Match in progress"></button>
+        <button type="button" aria-label="AI Forge"></button>
       </div>
     </div>
   </section>
@@ -307,12 +337,13 @@
         <h2>See it in action</h2>
         <p>Collect the cards, forge your own, and duel across three lanes.</p>
       </div>
-      <div class="gallery-row">
-        <figure class="shot"><div class="frame"><img src="shots/collection.jpg" alt="The Mythwright collection screen — 202 of 213 cards collected, with Dracula, Van Helsing, Mina Harker, and The Creature." loading="lazy"></div><figcaption class="cap">Collect 200+ cards</figcaption></figure>
-        <figure class="shot"><div class="frame"><img src="shots/lanes.jpg" alt="A Mythwright match in progress across the Sherwood Forest and Skeleton Cove lanes, with a hand of character cards." loading="lazy"></div><figcaption class="cap">Duel across three lanes</figcaption></figure>
-        <figure class="shot"><div class="frame"><img src="shots/card.jpg" alt="A Mythwright card detail — Dracula, a Legendary Gothic card, with its On Reveal ability and flavor quote." loading="lazy"></div><figcaption class="cap">Every card is a legend</figcaption></figure>
-        <figure class="shot"><div class="frame"><img src="shots/forge.jpg" alt="The Mythwright AI Forge — describe a character and it paints the portrait, balances the stats, and writes the ability." loading="lazy"></div><figcaption class="cap">Forge your own with AI</figcaption></figure>
-        <figure class="shot"><div class="frame"><img src="shots/ladder.jpg" alt="The Mythwright profile screen with daily missions and progression toward Pro." loading="lazy"></div><figcaption class="cap">Missions &amp; progression</figcaption></figure>
+      <div class="gallery-grid">
+        <figure class="shot"><div class="frame"><img src="shots/collection.jpg" alt="The Mythwright collection screen — hundreds of cards collected, each an illustrated mythic character." loading="lazy"></div><figcaption class="cap">Collect 200+ cards</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/lanes.jpg" alt="A Mythwright match mid-game — character cards committed across three contested lanes." loading="lazy"></div><figcaption class="cap">Duel across three lanes</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/deck.jpg" alt="The Mythwright deck builder — assembling a twelve-card deck from the collection." loading="lazy"></div><figcaption class="cap">Build your deck</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/forge.jpg" alt="The Mythwright AI Forge in use — a described character ready to be forged into a card." loading="lazy"></div><figcaption class="cap">Forge your own with AI</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/card.jpg" alt="A Mythwright card detail — a Legendary card with its On Reveal ability and flavor quote." loading="lazy"></div><figcaption class="cap">Every card is a legend</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="screenshot.jpg" alt="The Mythwright home screen — Ranked, Practice, Campaign, and Conquest game modes." loading="lazy"></div><figcaption class="cap">Four ways to play</figcaption></figure>
       </div>
     </div>
   </section>
@@ -325,22 +356,22 @@
       </div>
       <div class="features">
         <div class="feature">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 2.7v5.3c0 4.6-3.2 7.8-7.5 9.2-4.3-1.4-7.5-4.6-7.5-9.2V5.7z"/><path d="M12 7.5v9"/></svg></div>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6l7.6 2.6v5.2c0 4.7-3.2 8.1-7.6 9.6-4.4-1.5-7.6-4.9-7.6-9.6V5.2z"/><path d="M12 3v17.6"/><path d="M4.6 8.7h14.8"/><circle cx="12" cy="8.7" r="1.4" fill="currentColor" stroke="none"/><circle cx="8" cy="13" r=".85" fill="currentColor" stroke="none"/><circle cx="16" cy="13" r=".85" fill="currentColor" stroke="none"/></svg></div>
           <h3>Six Factions</h3>
           <p>Each faction plays like nothing else — aggro warbands, patient control, swarms, and combo engines. Pick a banner and master its rhythm.</p>
         </div>
         <div class="feature">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="5" width="9" height="13" rx="1.6" transform="rotate(10 13 11.5)"/><rect x="6.5" y="6" width="9" height="13" rx="1.6" transform="rotate(-10 11 12.5)"/></svg></div>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9.2" y="4.6" width="9.4" height="13.6" rx="1.7" transform="rotate(15 13.9 11.4)"/><rect x="4" y="4.6" width="9.4" height="13.6" rx="1.7" transform="rotate(-15 8.7 11.4)"/><rect x="7.3" y="4.9" width="9.4" height="13.6" rx="1.7"/><circle cx="12" cy="9" r="1.3" fill="currentColor" stroke="none"/><path d="M10.4 13.4h3.2"/></svg></div>
           <h3>200+ Cards</h3>
           <p>A living roster of mythic characters, spells, and relics. Chase rares, complete sets, and find the synergies that break a lane wide open.</p>
         </div>
         <div class="feature">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 3.5l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/></svg></div>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.6 2.6l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7z" fill="currentColor" stroke="none"/><path d="M2.6 10.7c2.1-.95 3.4-1.35 5.5-1.35H15c0 2-1.5 3.15-3.8 3.25l.55 1.85H7.55l.55-1.85C6 12.45 3.7 11.95 2.6 10.7z" fill="currentColor" stroke="none"/><path d="M8.5 15.1h4l-.4 1.6h1.5v1.85H7.4V16.7h1.5z" fill="currentColor" stroke="none"/></svg></div>
           <h3>AI Card Forge</h3>
           <p>Conjure original cards from a prompt — art, name, and abilities forged on the fly. Bring your own legends to the battlefield.</p>
         </div>
         <div class="feature">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3.5 6v14L9 18l6 2 5.5-2V4L15 6z"/><line x1="9" y1="4" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="20"/></svg></div>
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4.3 3.7 6.1v13.6L9 17.9l6 1.9 5.3-1.8V4.2L15 6.1z"/><path d="M9 4.3v13.6M15 6.1v13.7"/><path d="M5.7 9.1c1.3 1.8 2.7 2.3 4 1.4" stroke-dasharray="0.1 2.3"/><path d="M16.3 8.6c1.2 0 2.1.9 2.1 2.1 0 1.4-2.1 3.3-2.1 3.3s-2.1-1.9-2.1-3.3c0-1.2.9-2.1 2.1-2.1z"/><circle cx="16.3" cy="10.8" r=".7" fill="currentColor" stroke="none"/></svg></div>
           <h3>Campaign Mode</h3>
           <p>A story-driven ladder of hand-crafted battles. Unlock cards as you go, learn each faction, and earn your place among the mythwrights.</p>
         </div>
@@ -369,12 +400,12 @@
         <p>Six mythic factions, each with its own identity and win condition.</p>
       </div>
       <div class="factions">
-        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.5 3 4.5 4.8 4.5 8.5a4.5 4.5 0 0 1-9 0c0-1.6.7-2.8 1.6-3.8C10 9 11 6.5 12 3z"/><path d="M12 20a2.2 2.2 0 0 0 2.2-2.2c0-1.4-1.2-2-2.2-3.3-1 1.3-2.2 1.9-2.2 3.3A2.2 2.2 0 0 0 12 20z"/></svg></div><h4>Emberkin</h4><p>Reckless aggression &amp; burn.</p></div>
-        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8c1.7-2.2 3.4-2.2 5 0s3.4 2.2 5 0 3.4-2.2 5 0"/><path d="M2.5 13c1.7-2.2 3.4-2.2 5 0s3.4 2.2 5 0 3.4-2.2 5 0"/><path d="M2.5 18c1.7-2.2 3.4-2.2 5 0s3.4 2.2 5 0 3.4-2.2 5 0"/></svg></div><h4>Tidewardens</h4><p>Control, bounce, and tempo.</p></div>
-        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L8 9h2.3L7 14h2.5L6 18.5h12L14.5 14H17l-3.3-5H16z"/><line x1="12" y1="18.5" x2="12" y2="21.5"/></svg></div><h4>Wildbound</h4><p>Swarms that grow every turn.</p></div>
-        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.2l1.3 2.5 2.7-.6.2 2.8 2.6 1-1.4 2.4 1.4 2.4-2.6 1-.2 2.8-2.7-.6L12 21.8l-1.3-2.5-2.7.6-.2-2.8-2.6-1 1.4-2.4L4.6 11l2.6-1 .2-2.8 2.7.6z"/></svg></div><h4>Ironforged</h4><p>Relics, engines, and value.</p></div>
-        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a6.7 6.7 0 0 0 11 11z"/></svg></div><h4>Nightsworn</h4><p>Sacrifice, guile, and combo.</p></div>
-        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5L5.5 13H11l-1 8.5L18.5 10H12.5z"/></svg></div><h4>Stormcallers</h4><p>Explosive spell payoffs.</p></div>
+        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5c.7 3.2 4.7 5 4.7 8.9A4.7 4.7 0 0 1 7.3 11.4c0-1.6.8-2.8 1.7-3.9C10 9.3 11 6.6 12 2.5z"/><path d="M12 12.3c.5 1.3 1.9 2 1.9 3.4A1.9 1.9 0 0 1 10.1 15.7c0-.9.6-1.5 1.1-2.2.3.4.5.6.8.9 0-.8-.1-1.4 0-2.1z" fill="currentColor" stroke="none"/></svg></div><h4>Emberkin</h4><p>Reckless aggression &amp; burn.</p></div>
+        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5V7"/><path d="M7.5 8.4Q12 10.7 16.5 8.4"/><path d="M7.5 8.4V4.3"/><path d="M6.3 5.5 7.5 4.3 8.7 5.5"/><path d="M16.5 8.4V4.3"/><path d="M15.3 5.5 16.5 4.3 17.7 5.5"/><path d="M12 8.5V3.3"/><path d="M10.8 4.5 12 3.3 13.2 4.5"/><path d="M10.1 20.5h3.8"/></svg></div><h4>Tidewardens</h4><p>Control, bounce, and tempo.</p></div>
+        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V13.1"/><path d="M12 13.1C10.7 10.7 8.9 9.3 6.9 8"/><path d="M8.6 9C7.6 8.6 7 7.7 6.9 6.6"/><path d="M7.5 8.3C6.3 8.3 5.4 7.6 5.1 6.4"/><path d="M12 13.1C13.3 10.7 15.1 9.3 17.1 8"/><path d="M15.4 9C16.4 8.6 17 7.7 17.1 6.6"/><path d="M16.5 8.3C17.7 8.3 18.6 7.6 18.9 6.4"/><path d="M10 21h4"/></svg></div><h4>Wildbound</h4><p>Swarms that grow every turn.</p></div>
+        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.3l1.3 2.5 2.7-.6.2 2.8 2.6 1-1.4 2.4 1.4 2.4-2.6 1-.2 2.8-2.7-.6L12 21.7l-1.3-2.5-2.7.6-.2-2.8-2.6-1 1.4-2.4L4.6 11l2.6-1 .2-2.8 2.7.6z"/><circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></svg></div><h4>Ironforged</h4><p>Relics, engines, and value.</p></div>
+        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.7 14.3A8.6 8.6 0 1 1 9.6 3a7 7 0 0 0 11.1 11.3z"/><path d="M16.6 3.5l.55 1.7 1.7.55-1.7.55-.55 1.7-.55-1.7-1.7-.55 1.7-.55z" fill="currentColor" stroke="none"/></svg></div><h4>Nightsworn</h4><p>Sacrifice, guile, and combo.</p></div>
+        <div class="faction"><div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.6 2.5 5.9 13.2h4.3l-1.7 8.3L18.1 10.1h-4.8z" fill="currentColor" stroke="none"/><circle cx="5" cy="7.4" r=".8" fill="currentColor" stroke="none"/><circle cx="19" cy="16.6" r=".8" fill="currentColor" stroke="none"/></svg></div><h4>Stormcallers</h4><p>Explosive spell payoffs.</p></div>
       </div>
     </div>
   </section>
@@ -403,5 +434,44 @@
       <div class="copy">© 2026 Mythwright. All cards, factions, and artwork are the property of their creators.</div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var root = document.getElementById('heroCarousel');
+      var dotBar = document.getElementById('heroDots');
+      if (!root || !dotBar) return;
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.slide'));
+      var dots = Array.prototype.slice.call(dotBar.querySelectorAll('button'));
+      if (slides.length < 2) return;
+      var i = 0, timer = null;
+      var INTERVAL = 3400;
+
+      function show(n) {
+        n = (n + slides.length) % slides.length;
+        slides[i].classList.remove('active');
+        dots[i].classList.remove('active');
+        i = n;
+        slides[i].classList.add('active');
+        dots[i].classList.add('active');
+      }
+      function next() { show(i + 1); }
+      function start() { stop(); timer = setInterval(next, INTERVAL); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+      dots.forEach(function (d, idx) {
+        d.addEventListener('click', function () { show(idx); start(); });
+      });
+      // Pause on hover so a viewer can dwell on a screen.
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      // Pause when the tab isn't visible.
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { stop(); } else { start(); }
+      });
+
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) start();
+    })();
+  </script>
 </body>
 </html>
