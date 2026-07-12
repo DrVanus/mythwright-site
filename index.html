@@ -164,6 +164,24 @@
     }
     .device img { display: block; width: 100%; border-radius: 34px; }
 
+    /* Screenshot gallery */
+    .gallery-row {
+      display: flex; gap: 24px; overflow-x: auto; padding: 6px 4px 22px;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .gallery-row::-webkit-scrollbar { display: none; }
+    .shot { flex: 0 0 auto; width: 220px; scroll-snap-align: center; text-align: center; }
+    .shot .frame {
+      padding: 9px; border-radius: 34px;
+      background: linear-gradient(160deg, #2c2213, #14100a);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow), 0 0 46px var(--gold-glow);
+    }
+    .shot .frame img { display: block; width: 100%; border-radius: 26px; }
+    .shot .cap { margin-top: 15px; font-size: .92rem; color: var(--muted-fg); font-weight: 600; }
+    @media (max-width: 640px) { .shot { width: 190px; } }
+
     /* ===== SECTION ===== */
     section { padding: 72px 0; position: relative; }
     .section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
@@ -246,6 +264,7 @@
     <div class="container">
       <div class="brand"><img src="app-icon.png" alt="Mythwright icon"> Mythwright</div>
       <div class="links">
+        <a href="#screens">Screens</a>
         <a href="#features">Features</a>
         <a href="#factions">Factions</a>
         <a href="#lanes">How it plays</a>
@@ -276,6 +295,22 @@
     <div class="container">
       <div class="device">
         <img src="screenshot.jpg" alt="The Mythwright home screen on iPhone — Ranked PvP, Practice, Campaign, and Conquest game modes with today's featured card.">
+      </div>
+    </div>
+  </section>
+
+  <section id="screens" aria-label="Mythwright screenshots">
+    <div class="container">
+      <div class="section-head">
+        <h2>See it in action</h2>
+        <p>Collect the cards, forge your own, and duel across three lanes.</p>
+      </div>
+      <div class="gallery-row">
+        <figure class="shot"><div class="frame"><img src="shots/collection.jpg" alt="The Mythwright collection screen — 202 of 213 cards collected, with Dracula, Van Helsing, Mina Harker, and The Creature." loading="lazy"></div><figcaption class="cap">Collect 200+ cards</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/lanes.jpg" alt="A Mythwright match in progress across the Sherwood Forest and Skeleton Cove lanes, with a hand of character cards." loading="lazy"></div><figcaption class="cap">Duel across three lanes</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/card.jpg" alt="A Mythwright card detail — Dracula, a Legendary Gothic card, with its On Reveal ability and flavor quote." loading="lazy"></div><figcaption class="cap">Every card is a legend</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/forge.jpg" alt="The Mythwright AI Forge — describe a character and it paints the portrait, balances the stats, and writes the ability." loading="lazy"></div><figcaption class="cap">Forge your own with AI</figcaption></figure>
+        <figure class="shot"><div class="frame"><img src="shots/ladder.jpg" alt="The Mythwright profile screen with daily missions and progression toward Pro." loading="lazy"></div><figcaption class="cap">Missions &amp; progression</figcaption></figure>
       </div>
     </div>
   </section>
